@@ -1,0 +1,59 @@
+REPORT zinsert_sup_product_2515.
+
+DATA: wa_product TYPE zsup_prod_2515.
+
+PARAMETERS:
+  p_id       TYPE zsup_prod_2515-product_id,
+  p_name     TYPE zsup_prod_2515-product_name,
+  p_cate TYPE zsup_prod_2515-category,
+  p_brand    TYPE zsup_prod_2515-brand,
+  p_unit     TYPE zsup_prod_2515-unit,
+  p_qty      TYPE zsup_prod_2515-quantity,
+  p_price    TYPE zsup_prod_2515-price,
+  p_supp TYPE zsup_prod_2515-supplier,
+  p_status   TYPE zsup_prod_2515-status.
+
+START-OF-SELECTION.
+
+  "Check whether Product ID already exists
+  CLEAR wa_product.
+
+  SELECT SINGLE *
+    FROM zsup_prod_2515
+    INTO wa_product
+    WHERE product_id = p_id.
+
+  IF sy-subrc = 0.
+
+    MESSAGE 'Product ID already exists' TYPE 'E'.
+
+  ENDIF.
+
+  "Clear work area
+  CLEAR wa_product.
+
+  "Move input values to work area
+  wa_product-product_id   = p_id.
+  wa_product-product_name = p_name.
+  wa_product-category     = p_cate.
+  wa_product-brand        = p_brand.
+  wa_product-unit         = p_unit.
+  wa_product-quantity     = p_qty.
+  wa_product-price        = p_price.
+  wa_product-supplier     = p_supp.
+  wa_product-status       = p_status.
+
+  "Insert product
+  INSERT zsup_prod_2515 FROM WA_PRODUCT.
+
+  IF sy-subrc = 0.
+
+    COMMIT WORK.
+
+    MESSAGE 'Product inserted successfully' TYPE 'S'.
+
+  ELSE.
+
+    MESSAGE 'Product insertion failed' TYPE 'E'.
+
+  ENDIF.
