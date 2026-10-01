@@ -1,0 +1,96 @@
+*&---------------------------------------------------------------------*
+*& Report ZALV_SUP_PRODUCT_2515
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZALV_SUP_PRODUCT_2515.
+
+
+TABLES: zsup_prod_2515.
+
+DATA:
+  it_product TYPE TABLE OF zsup_prod_2515,
+  wa_product TYPE zsup_prod_2515.
+
+DATA:
+  it_fieldcat TYPE slis_t_fieldcat_alv,
+  wa_fieldcat TYPE slis_fieldcat_alv.
+
+START-OF-SELECTION.
+
+  "Fetch all product data
+  SELECT *
+    FROM zsup_prod_2515
+    INTO TABLE it_product.
+
+  IF sy-subrc <> 0.
+
+    MESSAGE 'No product data found' TYPE 'I'.
+    EXIT.
+
+  ENDIF.
+
+  "Create field catalog
+
+  CLEAR wa_fieldcat.
+  wa_fieldcat-fieldname = 'PRODUCT_ID'.
+  wa_fieldcat-seltext_m = 'Product ID'.
+  APPEND wa_fieldcat TO it_fieldcat.
+
+  CLEAR wa_fieldcat.
+  wa_fieldcat-fieldname = 'PRODUCT_NAME'.
+  wa_fieldcat-seltext_m = 'Product Name'.
+  APPEND wa_fieldcat TO it_fieldcat.
+
+  CLEAR wa_fieldcat.
+  wa_fieldcat-fieldname = 'CATEGORY'.
+  wa_fieldcat-seltext_m = 'Category'.
+  APPEND wa_fieldcat TO it_fieldcat.
+
+  CLEAR wa_fieldcat.
+  wa_fieldcat-fieldname = 'BRAND'.
+  wa_fieldcat-seltext_m = 'Brand'.
+  APPEND wa_fieldcat TO it_fieldcat.
+
+  CLEAR wa_fieldcat.
+  wa_fieldcat-fieldname = 'UNIT'.
+  wa_fieldcat-seltext_m = 'Unit'.
+  APPEND wa_fieldcat TO it_fieldcat.
+
+  CLEAR wa_fieldcat.
+  wa_fieldcat-fieldname = 'QUANTITY'.
+  wa_fieldcat-seltext_m = 'Quantity'.
+  APPEND wa_fieldcat TO it_fieldcat.
+
+  CLEAR wa_fieldcat.
+  wa_fieldcat-fieldname = 'PRICE'.
+  wa_fieldcat-seltext_m = 'Price'.
+  APPEND wa_fieldcat TO it_fieldcat.
+
+  CLEAR wa_fieldcat.
+  wa_fieldcat-fieldname = 'SUPPLIER'.
+  wa_fieldcat-seltext_m = 'Supplier'.
+  APPEND wa_fieldcat TO it_fieldcat.
+
+
+  CLEAR wa_fieldcat.
+  wa_fieldcat-fieldname = 'STATUS'.
+  wa_fieldcat-seltext_m = 'Status'.
+  APPEND wa_fieldcat TO it_fieldcat.
+
+  "Display ALV
+
+  CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+    EXPORTING
+      it_fieldcat = it_fieldcat
+    TABLES
+      t_outtab    = it_product
+    EXCEPTIONS
+      program_error = 1
+      OTHERS        = 2.
+
+  IF sy-subrc <> 0.
+
+    MESSAGE 'Error while displaying ALV' TYPE 'E'.
+
+  ENDIF.
