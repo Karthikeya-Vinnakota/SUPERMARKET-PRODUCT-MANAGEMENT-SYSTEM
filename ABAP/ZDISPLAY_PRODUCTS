@@ -1,0 +1,45 @@
+*&---------------------------------------------------------------------*
+*& Report ZDISPLAY_SUP_PRODUCT_2515
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZDISPLAY_SUP_PRODUCT_2515.
+
+DATA: wa_product TYPE zsup_prod_2515.
+
+PARAMETERS:
+  p_id TYPE zsup_prod_2515-product_id.
+
+START-OF-SELECTION.
+
+  "Clear work area
+  CLEAR wa_product.
+
+  "Display product data
+  SELECT SINGLE *
+    FROM zsup_prod_2515
+    INTO wa_product
+    WHERE product_id = p_id.
+
+  IF sy-subrc <> 0.
+
+    MESSAGE 'Product ID not found' TYPE 'E'.
+
+  ENDIF.
+
+  "Display product details
+  WRITE: / '--------------------------------------------'.
+  WRITE: / '       SUPERMARKET PRODUCT DETAILS'.
+  WRITE: / '--------------------------------------------'.
+
+  WRITE: / 'Product ID   :', wa_product-product_id.
+  WRITE: / 'Product Name :', wa_product-product_name.
+  WRITE: / 'Category     :', wa_product-category.
+  WRITE: / 'Brand        :', wa_product-brand.
+  WRITE: / 'Unit         :', wa_product-unit.
+  WRITE: / 'Quantity     :', wa_product-quantity.
+  WRITE: / 'Price        :', wa_product-price.
+  WRITE: / 'Supplier     :', wa_product-supplier.
+  WRITE: / 'Status       :', wa_product-status.
+
+  WRITE: / '--------------------------------------------'.
